@@ -5,8 +5,20 @@
 
 /******************************************************************************/
 /* Definición de la estructura de datos del tablero */
+struct _casilla
+{
+    char valor;
+};
 
-struct _board;
+typedef struct _casilla casilla_t;
+
+struct _board
+{
+    int filas;
+    int columnas;
+    casilla_t ***casillas;
+};
+
 typedef struct _board board_t;
 /******************************************************************************/
 /******************************************************************************/

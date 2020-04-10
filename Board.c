@@ -1,9 +1,35 @@
 #include "board.h"
+#include <stdlib.h>
 
-int board_init(board_t *board, size_t col, size_t row);
+/* Creación del tablero */
+int board_init(board_t *board, size_t col, size_t row)
+{
+    board = malloc(sizeof(board_t));
+    board->casillas = malloc(sizeof(casilla_t **) * row);
+    for (size_t fila = 0; fila < row; fila++)
+    {
+        board->casillas[fila] = malloc(sizeof(casilla_t *) * col);
+        for (size_t columna = 0; columna < col; columna++)
+        {
+            board->casillas[fila][columna] = malloc(sizeof(casilla_t) * col);
+        }
+    }
+    return 0;
+}
 
 /* Creación del tablero con un elemento por default*/
-int board_init_def(board_t *board, size_t col, size_t row, char def);
+int board_init_def(board_t *board, size_t col, size_t row, char def)
+{
+    board_init(board, col, row);
+    for (size_t fila = 0; fila < row; fila++)
+    {
+        for (size_t columna = 0; columna < col; columna++)
+        {
+            board->casillas[fila][columna]->valor = def;
+        }
+    }
+    return 0;
+}
 
 /* Leer el tablero en una posición (col, row) */
 char board_get(board_t board, size_t col, size_t row);
@@ -19,4 +45,16 @@ int board_load(board_t *board, char *str);
 void board_show(board_t board, char *res);
 
 /* Destroy board */
-void board_destroy(board_t *board);
+void board_destroy(board_t *board)
+{
+    for (size_t fila = 0; fila < board->filas; fila++)
+    {
+        for (size_t columna = 0; columna < board->columnas; columna++)
+        {
+            free(board->casillas[fila][columna]);
+        }
+        free(board->casillas[fila]);
+    }
+    free(board->casillas);
+    free(board);
+}
