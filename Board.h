@@ -44,6 +44,9 @@ int board_load(board_t *board, char *str);
 /* La función 'board_show' asume que hay espacio suficiente en 'res' para alojar el tablero.*/
 void board_show(board_t board, char *res);
 
+/* Función para mostrar el tablero por panatalla*/
+void board_print(board_t *board);
+
 /* Destroy board */
 void board_destroy(board_t *board);
 #endif

@@ -1,6 +1,7 @@
 #include "Board.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 /* Creación del tablero */
 int board_init(board_t *board, size_t col, size_t row)
@@ -12,7 +13,7 @@ int board_init(board_t *board, size_t col, size_t row)
         board->casillas[fila] = malloc(sizeof(casilla_t *) * col);
         for (size_t columna = 0; columna < col; columna++)
         {
-            board->casillas[fila][columna] = malloc(sizeof(casilla_t) * col);
+            board->casillas[fila][columna] = malloc(sizeof(casilla_t));
         }
     }
     return 0;
@@ -74,6 +75,19 @@ void board_show(board_t board, char *res)
             res[fila * (board.columnas + 1) + columna] = board.casillas[fila][columna]->valor;
         }
         res[fila * (board.columnas + 1)] = '\n';
+    }
+}
+
+/* Función para mostrar el tablero por panatalla*/
+void board_print(board_t *board)
+{
+    for (size_t fila = 0; fila < board->filas; fila++)
+    {
+        for (size_t columna = 0; columna < board->columnas; columna++)
+        {
+            printf("%c", board->casillas[fila][columna]->valor);
+        }
+        printf("\n");
     }
 }
 
