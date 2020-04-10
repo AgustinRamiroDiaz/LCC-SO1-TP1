@@ -55,8 +55,11 @@ int board_load(board_t *board, char *str)
             fila++;
             columna = 0;
         }
-        board->casillas[fila][columna] = str[posicion];
-        columna++;
+        else
+        {
+            board->casillas[fila][columna]->valor = str[posicion];
+            columna++;
+        }
     }
 }
 
