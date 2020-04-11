@@ -4,9 +4,8 @@
 #include <stdio.h>
 
 /* Creación del tablero */
-int board_init(board_t *board, size_t col, size_t row)
+int board_init(board_t *board, size_t row, size_t col)
 {
-    board = malloc(sizeof(board_t));
     board->casillas = malloc(sizeof(casilla_t **) * row);
     for (size_t fila = 0; fila < row; fila++)
     {
@@ -20,7 +19,7 @@ int board_init(board_t *board, size_t col, size_t row)
 }
 
 /* Creación del tablero con un elemento por default*/
-int board_init_def(board_t *board, size_t col, size_t row, char def)
+int board_init_def(board_t *board, size_t row, size_t col, char def)
 {
     board_init(board, col, row);
     for (size_t fila = 0; fila < row; fila++)
@@ -34,13 +33,13 @@ int board_init_def(board_t *board, size_t col, size_t row, char def)
 }
 
 /* Leer el tablero en una posición (col, row) */
-char board_get(board_t board, size_t col, size_t row)
+char board_get(board_t board, size_t row, size_t col)
 {
     return board.casillas[row][col]->valor;
 }
 
 /* Asignarle un valor 'val' a la posición (col, row) del tablero*/
-int board_set(board_t board, size_t col, size_t row, char val)
+int board_set(board_t board, size_t row, size_t col, char val)
 {
     board.casillas[row][col]->valor = val;
 }
@@ -79,13 +78,13 @@ void board_show(board_t board, char *res)
 }
 
 /* Función para mostrar el tablero por panatalla*/
-void board_print(board_t *board)
+void board_print(board_t board)
 {
-    for (size_t fila = 0; fila < board->filas; fila++)
+    for (size_t fila = 0; fila < board.filas; fila++)
     {
-        for (size_t columna = 0; columna < board->columnas; columna++)
+        for (size_t columna = 0; columna < board.columnas; columna++)
         {
-            printf("%c", board->casillas[fila][columna]->valor);
+            printf("%c", board.casillas[fila][columna]->valor);
         }
         printf("\n");
     }

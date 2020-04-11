@@ -4,9 +4,10 @@
 
 int main(int argc, char const *argv[])
 {
-    board_t *tablero;
+    board_t tablero;
     printf("Inicializando tablero\n");
-    board_init_def(tablero, 3, 3, 'X');
+    board_init_def(&tablero, 3, 3, 'X');
+    printf("filas: %d \n columnas: %d \n", tablero.filas, tablero.columnas);
     printf("Imprimiendo tablero\n");
     board_print(tablero);
     // printf("Cargando tablero\n");
