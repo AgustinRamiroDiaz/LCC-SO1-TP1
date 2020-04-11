@@ -13,9 +13,10 @@ int main(int argc, char const *argv[])
     // printf("Cargando tablero\n");
     // board_load(tablero, "XXX\nOOO\nXXX");
     // printf("Tablero cargado\n");
-    // char buff[100]; 
+    char buff[100]; 
     // printf("Mostrando tablero\n");
     // board_show(*tablero, buff);
     // printf("%s", buff);
+    scanf("%s", buff);
     return 0;
 }

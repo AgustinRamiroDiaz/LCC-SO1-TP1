@@ -6,6 +6,8 @@
 /* Creación del tablero */
 int board_init(board_t *board, size_t row, size_t col)
 {
+    board->filas = row;
+    board->columnas = col;
     board->casillas = malloc(sizeof(casilla_t **) * row);
     for (size_t fila = 0; fila < row; fila++)
     {
