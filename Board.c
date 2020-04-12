@@ -35,15 +35,15 @@ int board_init_def(board_t *board, size_t row, size_t col, char def)
 }
 
 /* Leer el tablero en una posición (col, row) */
-char board_get(board_t board, size_t row, size_t col)
+char board_get(board_t *board, size_t row, size_t col)
 {
-    return board.casillas[row][col]->valor;
+    return board->casillas[row][col]->valor;
 }
 
 /* Asignarle un valor 'val' a la posición (col, row) del tablero*/
-int board_set(board_t board, size_t row, size_t col, char val)
+int board_set(board_t *board, size_t row, size_t col, char val)
 {
-    board.casillas[row][col]->valor = val;
+    board->casillas[row][col]->valor = val;
     return 0;
 }
 
@@ -104,28 +104,28 @@ void board_load_from_file(board_t *board, const char *nombreArchivo)
 
 /* Función para mostrar el tablero */
 /* La función 'board_show' asume que hay espacio suficiente en 'res' para alojar el tablero.*/
-void board_show(board_t board, char *res)
+void board_show(board_t *board, char *res)
 {
-    for (size_t fila = 0; fila < board.filas; fila++)
+    for (size_t fila = 0; fila < board->filas; fila++)
     {
         size_t columna;
-        for (columna = 0; columna < board.columnas; columna++)
+        for (columna = 0; columna < board->columnas; columna++)
         {
-            res[fila * (board.columnas + 1) + columna] = board.casillas[fila][columna]->valor;
+            res[fila * (board->columnas + 1) + columna] = board->casillas[fila][columna]->valor;
         }
-        res[fila * (board.columnas + 1) + columna] = '\n';
+        res[fila * (board->columnas + 1) + columna] = '\n';
     }
-    res[(board.filas + 1) * (board.columnas + 1)] = '\0';
+    res[(board->filas + 1) * (board->columnas + 1)] = '\0';
 }
 
 /* Función para mostrar el tablero por panatalla*/
-void board_print(board_t board)
+void board_print(board_t *board)
 {
-    for (size_t fila = 0; fila < board.filas; fila++)
+    for (size_t fila = 0; fila < board->filas; fila++)
     {
-        for (size_t columna = 0; columna < board.columnas; columna++)
+        for (size_t columna = 0; columna < board->columnas; columna++)
         {
-            printf("%c", board.casillas[fila][columna]->valor);
+            printf("%c", board->casillas[fila][columna]->valor);
         }
         printf("\n");
     }
@@ -144,4 +144,18 @@ void board_destroy(board_t *board)
     }
     free(board->casillas);
     free(board);
+}
+
+void board_step_cell(board_t *board, int row, int col)
+{
+    char viejoValor = board_get(board, row, col);
+
+    for (size_t i = -1; i < 2; i++)
+    {
+        board_get(board, (row + 1) % board->filas, (col + i) % board->columnas);
+    }
+
+    // wait for barrier
+
+    board_set(board, row, col, );
 }
