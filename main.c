@@ -2,12 +2,6 @@
 #include <stdio.h>
 #include "Board.h"
 
-void clear_screen()
-{
-    printf("\e[1;1H\e[2J");
-}
-
-
 int main(int argc, char const *argv[])
 {
     board_t tablero;
@@ -26,7 +20,8 @@ int main(int argc, char const *argv[])
 
     // printf("%s", buff);
 
-    board_load_from_file(&tablero, "Ejemplo.game");
+    int ciclos = board_load_from_file(&tablero, "Ejemplo.game");
+    board_run(&tablero, ciclos);
     board_print(&tablero);
     
     

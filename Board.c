@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <pthread.h>
+#include <time.h>
 
 pthread_barrier_t barrera;
 
@@ -70,7 +71,7 @@ int board_load(board_t *board, char *str)
     return 0;
 }
 
-void board_load_from_file(board_t *board, const char *nombreArchivo)
+int board_load_from_file(board_t *board, const char *nombreArchivo)
 {
     FILE *archivo = fopen(nombreArchivo, "r");
     char buffer[10000];
@@ -103,6 +104,7 @@ void board_load_from_file(board_t *board, const char *nombreArchivo)
 
     board_init(board, filas, columnas);
     board_load(board, buffer);
+    return ciclos;
 }
 
 /* Función para mostrar el tablero */
@@ -223,6 +225,11 @@ void board_step_cell(board_t *board, int row, int col)
     board_set(board, row, col, nuevoValor);
 }
 
+void clear_screen()
+{
+    printf("\e[1;1H\e[2J");
+}
+
 struct arg
 {
     board_t *board;
@@ -235,6 +242,8 @@ void board_run(board_t *board, int cycles)
 {
     pthread_barrier_init(&barrera, NULL, board->filas * board->columnas);
     pthread_t hilos[board->filas][board->columnas];
+    // pthread_t hiloBarrera;
+    // inicializamos los hilos
     for (size_t fila = 0; fila < board->filas; fila++)
     {
         for (size_t columna = 0; columna < board->columnas; columna++)
@@ -249,14 +258,26 @@ void board_run(board_t *board, int cycles)
         }
     }
 
+    // pthread_create(&hiloBarrera, NULL, board_print_on_barrier, (void *)board);
+
+    // esperamos los hilos
     for (size_t fila = 0; fila < board->filas; fila++)
     {
         for (size_t columna = 0; columna < board->columnas; columna++)
         {
-            pthread_join(&hilos[fila][columna], NULL);
+            pthread_join((hilos[fila][columna]), NULL);
+            
         }
     }
 }
+
+// void* board_print_on_barrier(void* arg)
+// {
+//     board_t * tablero = (board_t *)arg;
+//     sleep(1);
+//     pthread_barrier_wait(&barrera);
+//     board_print(tablero);
+// }
 
 void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 {
