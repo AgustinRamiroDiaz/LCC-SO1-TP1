@@ -149,13 +149,77 @@ void board_destroy(board_t *board)
 void board_step_cell(board_t *board, int row, int col)
 {
     char viejoValor = board_get(board, row, col);
-
-    for (size_t i = -1; i < 2; i++)
+    char vecina;
+    int vecinasVivas = 0;
+    for (size_t offset = -1; offset < 2; offset++)
     {
-        board_get(board, (row + 1) % board->filas, (col + i) % board->columnas);
+        // vecinas de abajo
+        vecina = board_get(board,
+                           (row + 1) % board->filas,
+                           (col + board->columnas + offset) % board->columnas);
+        if (is_alive(vecina))
+        {
+            vecinasVivas++;
+        }
+        // vecinas de arriba
+        vecina = board_get(board,
+                           (row + board->filas + -1) % board->filas,
+                           (col + board->columnas + offset) % board->columnas);
+        if (is_alive(vecina))
+        {
+            vecinasVivas++;
+        }
+    }
+
+    // vecina de la izquierda
+    vecina = board_get(board,
+                       row,
+                       (col + board->columnas + -1) % board->columnas);
+
+    if (is_alive(vecina))
+    {
+        vecinasVivas++;
+    }
+    // vecina de la derecha
+    vecina = board_get(board,
+                       row,
+                       (col + 1) % board->columnas);
+
+    if (is_alive(vecina))
+    {
+        vecinasVivas++;
+    }
+
+    char nuevoValor;
+    if (is_alive(viejoValor))
+    {
+        if (vecinasVivas == 2 && vecinasVivas == 3)
+        {
+            nuevoValor = viejoValor;
+        }
+        else
+        {
+            nuevoValor = 'X';
+        }
+    }
+    else
+    {
+        if (vecinasVivas == 3)
+        {
+            nuevoValor = 'O';
+        }
+        else
+        {
+            nuevoValor = viejoValor;
+        }
     }
 
     // wait for barrier
 
-    board_set(board, row, col, );
+    board_set(board, row, col, nuevoValor);
+}
+
+int is_alive(char cell)
+{
+    return cell == 'X';
 }
