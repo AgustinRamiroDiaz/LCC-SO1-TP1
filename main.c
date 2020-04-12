@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
     // printf("%s", buff);
 
     board_load_from_file(&tablero, "Ejemplo.game");
-    //board_print(tablero);
+    board_print(tablero);
     printf("Fin");
 
     return 0;

@@ -87,15 +87,15 @@ void board_load_from_file(board_t *board, const char *nombreArchivo)
         columnas = atoi(buffer);
     }
 
+    // salteamos el \n
+    getc(archivo);
     char c;
     int contador = 0;
     while ((c = getc(archivo)) != EOF)
     {
-        putchar(c);
         buffer[contador++] = c;
     }
     buffer[contador] = '\0';
-    //printf("%s", buffer);
     fclose(archivo);
 
     board_init(board, filas, columnas);
