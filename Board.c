@@ -44,6 +44,7 @@ char board_get(board_t board, size_t row, size_t col)
 int board_set(board_t board, size_t row, size_t col, char val)
 {
     board.casillas[row][col]->valor = val;
+    return 0;
 }
 
 /* Leer de una lista de caracteres e interpretarla como un tablero */
@@ -63,6 +64,42 @@ int board_load(board_t *board, char *str)
             columna++;
         }
     }
+    return 0;
+}
+
+void board_load_from_file(board_t *board, const char *nombreArchivo)
+{
+    FILE *archivo = fopen(nombreArchivo, "r");
+    char buffer[10000];
+    int ciclos, filas, columnas;
+    if (1 == fscanf(archivo, "%s", buffer))
+    {
+        ciclos = atoi(buffer);
+    }
+
+    if (1 == fscanf(archivo, "%s", buffer))
+    {
+        filas = atoi(buffer);
+    }
+
+    if (1 == fscanf(archivo, "%s", buffer))
+    {
+        columnas = atoi(buffer);
+    }
+
+    char c;
+    int contador = 0;
+    while ((c = getc(archivo)) != EOF)
+    {
+        putchar(c);
+        buffer[contador++] = c;
+    }
+    buffer[contador] = '\0';
+    //printf("%s", buffer);
+    fclose(archivo);
+
+    board_init(board, filas, columnas);
+    board_load(board, buffer);
 }
 
 /* Función para mostrar el tablero */
