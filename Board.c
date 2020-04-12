@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <pthread.h>
+
+pthread_barrier_t barrera;
 
 /* Creación del tablero */
 int board_init(board_t *board, size_t row, size_t col)
@@ -215,8 +218,54 @@ void board_step_cell(board_t *board, int row, int col)
     }
 
     // wait for barrier
+    pthread_barrier_wait(&barrera);
 
     board_set(board, row, col, nuevoValor);
+}
+
+struct arg
+{
+    board_t *board;
+    int row;
+    int col;
+    int cycles;
+};
+
+void board_run(board_t *board, int cycles)
+{
+    pthread_barrier_init(&barrera, NULL, board->filas * board->columnas);
+    pthread_t hilos[board->filas][board->columnas];
+    for (size_t fila = 0; fila < board->filas; fila++)
+    {
+        for (size_t columna = 0; columna < board->columnas; columna++)
+        {
+            // crear hilos
+            struct arg argumento;
+            argumento.board = board;
+            argumento.row = fila;
+            argumento.col = columna;
+            argumento.cycles = cycles;
+            pthread_create(&hilos[fila][columna], NULL, board_run_cell, (void *)&argumento);
+        }
+    }
+
+    for (size_t fila = 0; fila < board->filas; fila++)
+    {
+        for (size_t columna = 0; columna < board->columnas; columna++)
+        {
+            pthread_join(&hilos[fila][columna], NULL);
+        }
+    }
+}
+
+void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
+{
+    struct arg argumento = *(struct arg *)(arg);
+
+    for (size_t i = 0; i < argumento.cycles; i++)
+    {
+        board_step_cell(argumento.board, argumento.row, argumento.col);
+    }
 }
 
 int is_alive(char cell)

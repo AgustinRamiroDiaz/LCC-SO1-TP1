@@ -52,4 +52,11 @@ void board_print(board_t *board);
 
 /* Destroy board */
 void board_destroy(board_t *board);
+
+void board_step_cell(board_t *board, int row, int col);
+
+void board_run(board_t *board, int cycles);
+
+int is_alive(char cell);
+
 #endif
