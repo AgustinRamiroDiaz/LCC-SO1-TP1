@@ -23,7 +23,7 @@ int board_init(board_t *board, size_t row, size_t col)
 /* Creación del tablero con un elemento por default*/
 int board_init_def(board_t *board, size_t row, size_t col, char def)
 {
-    board_init(board, col, row);
+    board_init(board, row, col);
     for (size_t fila = 0; fila < row; fila++)
     {
         for (size_t columna = 0; columna < col; columna++)
@@ -71,12 +71,14 @@ void board_show(board_t board, char *res)
 {
     for (size_t fila = 0; fila < board.filas; fila++)
     {
-        for (size_t columna = 0; columna < board.columnas; columna++)
+        size_t columna;
+        for (columna = 0; columna < board.columnas; columna++)
         {
             res[fila * (board.columnas + 1) + columna] = board.casillas[fila][columna]->valor;
         }
-        res[fila * (board.columnas + 1)] = '\n';
+        res[fila * (board.columnas + 1) + columna] = '\n';
     }
+    res[(board.filas + 1) * (board.columnas + 1)] = '\0';
 }
 
 /* Función para mostrar el tablero por panatalla*/
