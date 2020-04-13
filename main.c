@@ -1,30 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "Board.h"
+#include "Game.h"
 
 int main(int argc, char const *argv[])
 {
-    board_t tablero;
-    // printf("Inicializando tablero\n");
-    // board_init_def(&tablero, 2, 5, 'X');
-    // printf("filas: %d \n columnas: %d \n", tablero.filas, tablero.columnas);
-    // printf("Imprimiendo tablero\n");
-    // board_print(tablero);
-    // printf("Cargando tablero\n");
-    // board_load(tablero, "XXX\nOOO\nXXX");
-    // printf("Tablero cargado\n");
-    // char buff[100]; 
-    // printf("Mostrando tablero\n");
-    // board_show(tablero, buff);
-    // printf("Tablero\n");
+    game_t *game = loadGame("Ejemplo.game");
+    congwayGoL(game->board, game->cycles, 0);
+    board_print(game->board);
 
-    // printf("%s", buff);
-
-    int ciclos = board_load_from_file(&tablero, "Ejemplo.game");
-    board_run(&tablero, ciclos);
-    board_print(&tablero);
-    
-    
     printf("\nFin\n");
     return 0;
 }
