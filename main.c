@@ -22,7 +22,7 @@ int main(int argc, char const *argv[])
 
     int ciclos = board_load_from_file(&tablero, "Ejemplo.game");
     board_run(&tablero, ciclos);
-    //board_print(&tablero);
+    // board_print(&tablero);
     
     
     printf("\nFin\n");

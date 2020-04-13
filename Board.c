@@ -225,9 +225,9 @@ void board_step_cell(board_t *board, int row, int col)
     pthread_barrier_wait(&barrera);
     //puts("");
     //printf("\t (%d,%d) Pasamos :)\t",row,col);
-    if(row == 0 && col == 0)
+    if (row == 0 && col == 0)
         board_print(board);
-    
+
     board_set(board, row, col, nuevoValor);
 }
 
@@ -255,12 +255,13 @@ void board_run(board_t *board, int cycles)
         for (size_t columna = 0; columna < board->columnas; columna++)
         {
             // crear hilos
-            struct arg argumento;
-            argumento.board = board;
-            argumento.row = fila;
-            argumento.col = columna;
-            argumento.cycles = cycles;
-            pthread_create(&hilos[fila][columna], NULL, board_run_cell, (void *)&argumento);
+            struct arg * argumento = malloc(sizeof(struct arg));
+            argumento->board = board;
+            argumento->row = fila;
+            argumento->col = columna;
+            argumento->cycles = cycles;
+            //printf("(%d,%d,%d)", argumento.row, argumento.col, argumento.cycles);
+            pthread_create(&hilos[fila][columna], NULL, board_run_cell, argumento);
         }
     }
 
@@ -272,7 +273,6 @@ void board_run(board_t *board, int cycles)
         for (size_t columna = 0; columna < board->columnas; columna++)
         {
             pthread_join((hilos[fila][columna]), NULL);
-            
         }
     }
 }
@@ -288,13 +288,12 @@ void board_run(board_t *board, int cycles)
 void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 {
     struct arg argumento = *((struct arg *)arg);
-    printf("(%d,%d,%d)",argumento.row,argumento.col,argumento.cycles);
-    board_print(argumento.board);
+    printf("\ndentro: (%d,%d)\n", argumento.row, argumento.col);
+    //board_print(argumento.board);
     for (size_t i = 0; i < argumento.cycles; i++)
     {
         board_step_cell(argumento.board, argumento.row, argumento.col);
     }
-    
 }
 
 int is_alive(char cell)
