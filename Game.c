@@ -146,14 +146,14 @@ void board_step_cell(board_t *board, int row, int col)
         }
         else
         {
-            nuevoValor = ALIVE;
+            nuevoValor = DEAD;
         }
     }
     else
     {
         if (vecinasVivas == 3)
         {
-            nuevoValor = DEAD;
+            nuevoValor = ALIVE;
         }
         else
         {
