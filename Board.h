@@ -8,7 +8,6 @@
 struct _casilla
 {
     char valor;
-    char nuevoValor;
 };
 
 typedef struct _casilla casilla_t;

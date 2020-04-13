@@ -156,7 +156,7 @@ void board_step_cell(board_t *board, int row, int col)
     char viejoValor = board_get(board, row, col);
     char vecina;
     int vecinasVivas = 0;
-    for (size_t offset = -1; offset < 2; offset++)
+    for (int offset = -1; offset < 2; offset++)
     {
         // vecinas de abajo
         vecina = board_get(board,
@@ -198,7 +198,7 @@ void board_step_cell(board_t *board, int row, int col)
     char nuevoValor;
     if (is_alive(viejoValor))
     {
-        if (vecinasVivas == 2 && vecinasVivas == 3)
+        if (vecinasVivas == 2 || vecinasVivas == 3)
         {
             nuevoValor = viejoValor;
         }
@@ -221,14 +221,19 @@ void board_step_cell(board_t *board, int row, int col)
 
     //printf("\t (%d,%d) Esperando :(\t",row,col);
     //puts("");
+    printf("\ncelula %c (%d, %d), vecinasVivas: %d\n", viejoValor, row, col, vecinasVivas);
     // wait for barrier
     pthread_barrier_wait(&barrera);
     //puts("");
     //printf("\t (%d,%d) Pasamos :)\t",row,col);
     if (row == 0 && col == 0)
-        board_print(board);
+       board_print(board);
+    
+    pthread_barrier_wait(&barrera);
 
     board_set(board, row, col, nuevoValor);
+
+    pthread_barrier_wait(&barrera);
 }
 
 void clear_screen()
@@ -288,7 +293,7 @@ void board_run(board_t *board, int cycles)
 void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 {
     struct arg argumento = *((struct arg *)arg);
-    printf("\ndentro: (%d,%d)\n", argumento.row, argumento.col);
+    //printf("\ndentro: (%d,%d)\n", argumento.row, argumento.col);
     //board_print(argumento.board);
     for (size_t i = 0; i < argumento.cycles; i++)
     {
@@ -298,5 +303,5 @@ void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 
 int is_alive(char cell)
 {
-    return cell == 'X';
+    return cell == 'O';
 }
