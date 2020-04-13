@@ -4,5 +4,5 @@ Board.h.gch
 Board.o
 a.exe
 a.out
-
 Game.h.gch
+*.o
