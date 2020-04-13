@@ -219,9 +219,15 @@ void board_step_cell(board_t *board, int row, int col)
         }
     }
 
+    //printf("\t (%d,%d) Esperando :(\t",row,col);
+    //puts("");
     // wait for barrier
     pthread_barrier_wait(&barrera);
-
+    //puts("");
+    //printf("\t (%d,%d) Pasamos :)\t",row,col);
+    if(row == 0 && col == 0)
+        board_print(board);
+    
     board_set(board, row, col, nuevoValor);
 }
 
@@ -281,12 +287,14 @@ void board_run(board_t *board, int cycles)
 
 void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 {
-    struct arg argumento = *(struct arg *)(arg);
-
+    struct arg argumento = *((struct arg *)arg);
+    printf("(%d,%d,%d)",argumento.row,argumento.col,argumento.cycles);
+    board_print(argumento.board);
     for (size_t i = 0; i < argumento.cycles; i++)
     {
         board_step_cell(argumento.board, argumento.row, argumento.col);
     }
+    
 }
 
 int is_alive(char cell)
