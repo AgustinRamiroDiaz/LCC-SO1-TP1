@@ -6,3 +6,5 @@ a.exe
 a.out
 
 Game.h.gch
+
+*.o
