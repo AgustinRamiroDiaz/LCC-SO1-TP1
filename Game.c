@@ -44,7 +44,7 @@ game_t *loadGame(const char *filename)
 /* Guardamos el tablero 'board' en el archivo 'filename' */
 void writeBoard(board_t *board, const char *filename)
 {
-    char boardStr[board->filas * (board->columnas + 1)];
+    char boardStr[board->filas * (board->columnas + 1) + 1];
     board_show(board, boardStr);
     FILE *archivo = fopen(filename, "w");
     fputs(boardStr, archivo);
@@ -164,12 +164,12 @@ void board_step_cell(board_t *board, int row, int col)
     // wait for barrier
     pthread_barrier_wait(&barrera);
 
-    if (row == 0 && col == 0)
-    {
-        clear_screen();
-        board_print(board);
-        sleep(1);
-    }
+    // if (row == 0 && col == 0)
+    // {
+    //     clear_screen();
+    //     board_print(board);
+    //     sleep(1);
+    // }
 
     pthread_barrier_wait(&barrera);
 

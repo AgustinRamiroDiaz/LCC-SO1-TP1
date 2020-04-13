@@ -83,7 +83,7 @@ void board_show(board_t *board, char *res)
         }
         res[fila * (board->columnas + 1) + columna] = '\n';
     }
-    res[(board->filas + 1) * (board->columnas + 1)] = '\0';
+    res[board->filas * (board->columnas + 1)] = '\0';
 }
 
 /* Función para mostrar el tablero por panatalla*/

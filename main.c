@@ -6,8 +6,6 @@ int main(int argc, char const *argv[])
 {
     game_t *game = loadGame("Ejemplo.game");
     congwayGoL(game->board, game->cycles, 0);
-    board_print(game->board);
-
-    printf("\nFin\n");
+    writeBoard(game->board, "Resultado.game");
     return 0;
 }
