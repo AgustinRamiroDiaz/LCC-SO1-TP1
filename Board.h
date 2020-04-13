@@ -60,4 +60,6 @@ void *board_run_cell(void *arg);
 
 int is_alive(char cell);
 
+void clear_screen();
+
 #endif

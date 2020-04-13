@@ -134,6 +134,7 @@ void board_print(board_t *board)
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 /* Destroy board */
@@ -219,16 +220,16 @@ void board_step_cell(board_t *board, int row, int col)
         }
     }
 
-    //printf("\t (%d,%d) Esperando :(\t",row,col);
-    //puts("");
-    printf("\ncelula %c (%d, %d), vecinasVivas: %d\n", viejoValor, row, col, vecinasVivas);
     // wait for barrier
     pthread_barrier_wait(&barrera);
-    //puts("");
-    //printf("\t (%d,%d) Pasamos :)\t",row,col);
+
     if (row == 0 && col == 0)
-       board_print(board);
-    
+    {
+        clear_screen();
+        board_print(board);
+        //sleep(1);
+    }
+
     pthread_barrier_wait(&barrera);
 
     board_set(board, row, col, nuevoValor);
@@ -253,19 +254,17 @@ void board_run(board_t *board, int cycles)
 {
     pthread_barrier_init(&barrera, NULL, board->filas * board->columnas);
     pthread_t hilos[board->filas][board->columnas];
-    // pthread_t hiloBarrera;
     // inicializamos los hilos
     for (size_t fila = 0; fila < board->filas; fila++)
     {
         for (size_t columna = 0; columna < board->columnas; columna++)
         {
             // crear hilos
-            struct arg * argumento = malloc(sizeof(struct arg));
+            struct arg *argumento = malloc(sizeof(struct arg));
             argumento->board = board;
             argumento->row = fila;
             argumento->col = columna;
             argumento->cycles = cycles;
-            //printf("(%d,%d,%d)", argumento.row, argumento.col, argumento.cycles);
             pthread_create(&hilos[fila][columna], NULL, board_run_cell, argumento);
         }
     }
@@ -282,19 +281,9 @@ void board_run(board_t *board, int cycles)
     }
 }
 
-// void* board_print_on_barrier(void* arg)
-// {
-//     board_t * tablero = (board_t *)arg;
-//     sleep(1);
-//     pthread_barrier_wait(&barrera);
-//     board_print(tablero);
-// }
-
 void *board_run_cell(void *arg) // board_t *board, int row, int col, int cycles)
 {
     struct arg argumento = *((struct arg *)arg);
-    //printf("\ndentro: (%d,%d)\n", argumento.row, argumento.col);
-    //board_print(argumento.board);
     for (size_t i = 0; i < argumento.cycles; i++)
     {
         board_step_cell(argumento.board, argumento.row, argumento.col);
