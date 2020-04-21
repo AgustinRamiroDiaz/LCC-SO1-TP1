@@ -5,7 +5,7 @@
 int main(int argc, char const *argv[])
 {
     game_t *game = loadGame("Ejemplo.game");
-    congwayGoL(game->board, game->cycles, 0);
+    congwayGoL(game->board, game->cycles, 10);
     writeBoard(game->board, "Resultado.game");
     return 0;
 }

@@ -175,17 +175,20 @@ void board_step_cell(board_t *board, int row, int col)
     }
 
     // wait for barrier
+    sem_post(&semaforo);
     pthread_barrier_wait(&barrera);
-
+    sem_wait(&semaforo);
     if (row == 0 && col == 0)
     {
         clear_screen();
         board_print(board);
-        //sleep();
+        sleep(1);
     }
     sem_post(&semaforo);
     pthread_barrier_wait(&barrera);
+    sem_wait(&semaforo);
     board_set(board, row, col, nuevoValor);
+    sem_post(&semaforo);
     pthread_barrier_wait(&barrera);
 }
 
