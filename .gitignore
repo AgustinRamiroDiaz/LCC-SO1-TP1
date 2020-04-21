@@ -1,8 +1,7 @@
 
 .vscode/
-Board.h.gch
-Board.o
-a.exe
-a.out
-Game.h.gch
+*.exe
+*.out
+*.gch
 *.o
+*.game

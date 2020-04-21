@@ -1,7 +1,10 @@
 #include "Game.h"
 #include <stdio.h>
 #include <pthread.h>
+#include <semaphore.h>
 #include <time.h>
+#include <unistd.h>
+#define MAXHILOS 5000
 
 /* Cargamos el juego desde un archivo */
 game_t *loadGame(const char *filename)
@@ -17,7 +20,6 @@ game_t *loadGame(const char *filename)
 
     fscanf(archivo, "%s", buff);
     int columnas = atoi(buff);
-
     // salteamos el \n
     getc(archivo);
     char buffer[filas * (columnas + 1)];
@@ -44,13 +46,14 @@ game_t *loadGame(const char *filename)
 /* Guardamos el tablero 'board' en el archivo 'filename' */
 void writeBoard(board_t *board, const char *filename)
 {
-    char boardStr[board->filas * (board->columnas + 1)];
+    char boardStr[board->filas * (board->columnas + 1) + 1];
     board_show(board, boardStr);
     FILE *archivo = fopen(filename, "w");
     fputs(boardStr, archivo);
     fclose(archivo);
 }
 
+sem_t semaforo;
 pthread_barrier_t barrera;
 struct arg
 {
@@ -64,6 +67,14 @@ struct arg
 ciclos indicados en 'cycles' en 'nuprocs' unidades de procesamiento*/
 board_t *congwayGoL(board_t *board, unsigned int cycles, const int nuproc)
 {
+    if(nuproc < MAXHILOS){
+        sem_init(&semaforo, 0, nuproc);
+        printf("\nBien wacho\n");
+    }
+    else{
+        sem_init(&semaforo, 0, MAXHILOS);
+        printf("\nExcedido\n");
+    }
     pthread_barrier_init(&barrera, NULL, board->filas * board->columnas);
     pthread_t hilos[board->filas][board->columnas];
     // inicializamos los hilos
@@ -77,6 +88,7 @@ board_t *congwayGoL(board_t *board, unsigned int cycles, const int nuproc)
             argumento->row = fila;
             argumento->col = columna;
             argumento->cycles = cycles;
+            sem_wait(&semaforo);
             pthread_create(&hilos[fila][columna], NULL, board_run_cell, argumento);
         }
     }
@@ -138,6 +150,7 @@ void board_step_cell(board_t *board, int row, int col)
     }
 
     char nuevoValor;
+
     if (is_alive(viejoValor))
     {
         if (vecinasVivas == 2 || vecinasVivas == 3)
@@ -168,13 +181,11 @@ void board_step_cell(board_t *board, int row, int col)
     {
         clear_screen();
         board_print(board);
-        sleep(1);
+        //sleep();
     }
-
+    sem_post(&semaforo);
     pthread_barrier_wait(&barrera);
-
     board_set(board, row, col, nuevoValor);
-
     pthread_barrier_wait(&barrera);
 }
 
