@@ -67,11 +67,13 @@ struct arg
 ciclos indicados en 'cycles' en 'nuprocs' unidades de procesamiento*/
 board_t *congwayGoL(board_t *board, unsigned int cycles, const int nuproc)
 {
-    if(nuproc < MAXHILOS){
+    if (nuproc < MAXHILOS)
+    {
         sem_init(&semaforo, 0, nuproc);
         printf("\nBien wacho\n");
     }
-    else{
+    else
+    {
         sem_init(&semaforo, 0, MAXHILOS);
         printf("\nExcedido\n");
     }
@@ -105,74 +107,49 @@ board_t *congwayGoL(board_t *board, unsigned int cycles, const int nuproc)
     }
 }
 
-void board_step_cell(board_t *board, int row, int col)
+int mod(int a, int b)
+{
+    int r = a % b;
+    return r < 0 ? r + b : r;
+}
+
+char get_next_cell_state(board_t *board, int row, int col)
 {
     char viejoValor = board_get(board, row, col);
-    char vecina;
     int vecinasVivas = 0;
-    for (int offset = -1; offset < 2; offset++)
-    {
-        // vecinas de abajo
-        vecina = board_get(board,
-                           (row + 1) % board->filas,
-                           (col + board->columnas + offset) % board->columnas);
-        if (is_alive(vecina))
-        {
-            vecinasVivas++;
-        }
-        // vecinas de arriba
-        vecina = board_get(board,
-                           (row + board->filas + -1) % board->filas,
-                           (col + board->columnas + offset) % board->columnas);
-        if (is_alive(vecina))
-        {
-            vecinasVivas++;
-        }
-    }
 
-    // vecina de la izquierda
-    vecina = board_get(board,
-                       row,
-                       (col + board->columnas + -1) % board->columnas);
-
-    if (is_alive(vecina))
-    {
+    if (is_alive(board_get(board, mod(row + -1, board->filas), mod(col + -1, board->columnas))))
         vecinasVivas++;
-    }
-    // vecina de la derecha
-    vecina = board_get(board,
-                       row,
-                       (col + 1) % board->columnas);
-
-    if (is_alive(vecina))
-    {
+    if (is_alive(board_get(board, mod(row + -1, board->filas), mod(col + 0, board->columnas))))
         vecinasVivas++;
-    }
+    if (is_alive(board_get(board, mod(row + -1, board->filas), mod(col + 1, board->columnas))))
+        vecinasVivas++;
 
-    char nuevoValor;
+    if (is_alive(board_get(board, mod(row + 0, board->filas), mod(col + -1, board->columnas))))
+        vecinasVivas++;
+    if (is_alive(board_get(board, mod(row + 0, board->filas), mod(col + 1, board->columnas))))
+        vecinasVivas++;
 
-    if (is_alive(viejoValor))
-    {
-        if (vecinasVivas == 2 || vecinasVivas == 3)
-        {
-            nuevoValor = viejoValor;
-        }
-        else
-        {
-            nuevoValor = DEAD;
-        }
-    }
-    else
-    {
-        if (vecinasVivas == 3)
-        {
-            nuevoValor = ALIVE;
-        }
-        else
-        {
-            nuevoValor = viejoValor;
-        }
-    }
+    if (is_alive(board_get(board, mod(row + 1, board->filas), mod(col + -1, board->columnas))))
+        vecinasVivas++;
+    if (is_alive(board_get(board, mod(row + 1, board->filas), mod(col + 0, board->columnas))))
+        vecinasVivas++;
+    if (is_alive(board_get(board, mod(row + 1, board->filas), mod(col + 1, board->columnas))))
+        vecinasVivas++;
+    
+    char nuevoValor = viejoValor;
+
+    if (!is_alive(viejoValor) && vecinasVivas == 3)
+        nuevoValor = ALIVE;
+    else if (is_alive(viejoValor) && vecinasVivas != 2 && vecinasVivas != 3)
+        nuevoValor = DEAD;
+
+    return nuevoValor;
+}
+
+void board_step_cell(board_t *board, int row, int col)
+{
+    char nuevoValor = get_next_cell_state(board, row, col);
 
     // wait for barrier
     sem_post(&semaforo);
