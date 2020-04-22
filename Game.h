@@ -9,8 +9,8 @@
 que se va a iterar */
 struct _game
 {
-  board_t *board;
-  unsigned int cycles;
+    board_t *board;
+    unsigned int cycles;
 };
 
 typedef struct _game game_t;
@@ -24,12 +24,12 @@ void writeBoard(board_t *board, const char *filename);
 
 /* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
 ciclos indicados en 'cycles' en 'nuprocs' unidades de procesamiento*/
-board_t *congwayGoL(board_t *board, unsigned int cycles, const int nuproc);
+board_t *congwayGoL(board_t *board, unsigned int cycles);
 
 void clear_screen();
 
 int is_alive(char cell);
 
-void *board_run_cell(void *arg);
+void *board_run_row(void *arg);
 
 void board_step_cell(board_t *board, int row, int col);
