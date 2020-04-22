@@ -4,7 +4,6 @@
 #include <semaphore.h>
 #include <time.h>
 #include <unistd.h>
-#define MAXHILOS 5000
 
 /* Cargamos el juego desde un archivo */
 game_t *loadGame(const char *filename)
@@ -55,12 +54,6 @@ void writeBoard(board_t *board, const char *filename)
 }
 
 pthread_barrier_t barrera;
-struct arg
-{
-    board_t *board;
-    int row;
-    int cycles;
-};
 
 /* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
 ciclos indicados en 'cycles' en 'nuprocs' unidades de procesamiento*/
@@ -79,8 +72,6 @@ board_t *congwayGoL(board_t *board, unsigned int cycles)
 
         pthread_create(&hilos[fila], NULL, board_run_row, argumento);
     }
-
-    // pthread_create(&hiloBarrera, NULL, board_print_on_barrier, (void *)board);
 
     // esperamos los hilos
     for (size_t fila = 0; fila < board->filas; fila++)
@@ -141,13 +132,13 @@ void *board_run_row(void *arg)
         pthread_barrier_wait(&barrera);
 
         // Descomentar si se quiere ver la animación
-        if (argumento->row == 0)
-        {
-            clear_screen();
-            board_print(argumento->board);
-            usleep(.5 * 1000000);
-        }
-        pthread_barrier_wait(&barrera);
+        // if (argumento->row == 0)
+        // {
+        //     clear_screen();
+        //     board_print(argumento->board);
+        //     usleep(.5 * 1000000);
+        // }
+        // pthread_barrier_wait(&barrera);
     }
 }
 
@@ -155,7 +146,6 @@ int is_alive(char cell)
 {
     return cell == ALIVE;
 }
-
 
 int mod(int a, int b)
 {
