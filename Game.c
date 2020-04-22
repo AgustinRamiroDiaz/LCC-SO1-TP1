@@ -89,12 +89,6 @@ board_t *congwayGoL(board_t *board, unsigned int cycles)
     }
 }
 
-int mod(int a, int b)
-{
-    int r = a % b;
-    return r < 0 ? r + b : r;
-}
-
 char get_next_cell_state(board_t *board, int row, int col)
 {
     char valor = board_get(board, row, col);
@@ -127,11 +121,6 @@ char get_next_cell_state(board_t *board, int row, int col)
     return valor;
 }
 
-void clear_screen()
-{
-    printf("\e[1;1H\e[2J");
-}
-
 void *board_run_row(void *arg)
 {
     struct arg *argumento = (struct arg *)arg;
@@ -152,17 +141,29 @@ void *board_run_row(void *arg)
         pthread_barrier_wait(&barrera);
 
         // Descomentar si se quiere ver la animación
-        // if (argumento->row == 0)
-        // {
-        //     clear_screen();
-        //     board_print(argumento->board);
-        //     sleep(1);
-        // }
-        // pthread_barrier_wait(&barrera);
+        if (argumento->row == 0)
+        {
+            clear_screen();
+            board_print(argumento->board);
+            usleep(.5 * 1000000);
+        }
+        pthread_barrier_wait(&barrera);
     }
 }
 
 int is_alive(char cell)
 {
     return cell == ALIVE;
+}
+
+
+int mod(int a, int b)
+{
+    int r = a % b;
+    return r < 0 ? r + b : r;
+}
+
+void clear_screen()
+{
+    printf("\e[1;1H\e[2J");
 }

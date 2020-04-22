@@ -33,3 +33,7 @@ int is_alive(char cell);
 void *board_run_row(void *arg);
 
 void board_step_cell(board_t *board, int row, int col);
+
+char get_next_cell_state(board_t *board, int row, int col);
+
+int mod(int a, int b);
