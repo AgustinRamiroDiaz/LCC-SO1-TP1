@@ -150,12 +150,15 @@ void *board_run_row(void *arg)
             board_set(argumento->board, argumento->row, columna, listaValores[columna]);
         }
         pthread_barrier_wait(&barrera);
-        if (argumento->board->columnas == 0)
-        {
-            clear_screen();
-            board_print(argumento->board);
-            sleep(1);
-        }
+
+        // Descomentar si se quiere ver la animación
+        // if (argumento->row == 0)
+        // {
+        //     clear_screen();
+        //     board_print(argumento->board);
+        //     sleep(1);
+        // }
+        // pthread_barrier_wait(&barrera);
     }
 }
 
