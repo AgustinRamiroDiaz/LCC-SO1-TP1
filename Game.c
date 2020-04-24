@@ -157,3 +157,65 @@ void clear_screen()
 {
     printf("\e[1;1H\e[2J");
 }
+
+pthread_mutex_t lock;
+int cambioTrabajo = 0;
+int filaActual = 0;
+int columnaActual = 0;
+int actualizar = 0;
+int conseguir_trabajo(board_t * board)
+{
+    pthread_mutex_lock(&lock);
+    int row = filaActual++;
+    int col = columnaActual++;
+    int actualizar ;
+    if (board->filas >= row && board->columnas >= col)
+    {
+        cambioTrabajo = 1;
+        row = row % board->filas;
+        col = col % board->columnas;
+        actualizar = !actualizar;
+    }
+    pthread_mutex_unlock(&lock);
+    if (cambioTrabajo)
+    {
+        pthread_barrier_wait(&barrera);
+        cambioTrabajo = 0;
+        pthread_barrier_wait(&barrera);
+    }
+}
+
+void *trabajador(void *arg){
+    board_t * board = (board_t *)arg;
+    for(;;){
+        int (actualizar, row, col) = conseguir_trabajo();
+        if (actualizar)
+        {
+            board_set(board, row, col, board->casillas[row][col]->nuevoValor);
+        }
+        else
+        {
+            board->casillas[row][col]->nuevoValor = get_next_cell_state(board, row, col);
+        }
+    }
+}
+
+mutex variable trabajos
+if var tarba != 0 -> 1, var -1 
+    var trabajo == 0 -> 2
+umutex
+1:
+trabajo
+jump loop
+2:
+barrera ------- cuando todos lleguen aca sigo a la actualizacion
+loop2
+mutex
+if var2 !=0 -> 1
+    var2 == 0 ->2
+unmutex
+1:
+actualiza
+jump loop2
+2:
+barrera2
