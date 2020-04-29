@@ -22,10 +22,6 @@ game_t *loadGame(const char *filename);
 /* Guardamos el tablero 'board' en el archivo 'filename' */
 void writeBoard(board_t *board, const char *filename);
 
-/* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
-ciclos indicados en 'cycles' */
-board_t *congwayGoL(board_t *board, unsigned int cycles);
-
 /* Argumento que toma la función board_run_row */
 struct arg
 {
@@ -33,6 +29,10 @@ struct arg
     int row;
     int cycles;
 };
+
+/* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
+ciclos indicados en 'cycles' */
+board_t *congwayGoL(board_t *board, unsigned int cycles);
 
 /* La función ejecutada por los hilos que trabaja sobre la fila indicada */
 void *board_run_row(void *arg);
