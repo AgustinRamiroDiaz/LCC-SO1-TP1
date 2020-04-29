@@ -75,6 +75,38 @@ board_t *congwayGoL(board_t *board, unsigned int cycles)
     }
 }
 
+/*Función con que trabajan los hilos*/
+void *board_run_row(void *arg)
+{
+    struct arg *argumento = (struct arg *)arg;
+    char listaValores[argumento->board->columnas];
+    for (size_t i = 0; i < argumento->cycles; i++)
+    {
+        for (size_t columna = 0; columna < argumento->board->columnas; columna++)
+        {
+            /* code */
+            listaValores[columna] = get_next_cell_state(argumento->board, argumento->row, columna);
+        }
+        pthread_barrier_wait(&barrera);
+        for (size_t columna = 0; columna < argumento->board->columnas; columna++)
+        {
+            /* code */
+            board_set(argumento->board, argumento->row, columna, listaValores[columna]);
+        }
+        pthread_barrier_wait(&barrera);
+
+        // Descomentar si se quiere ver la animación
+        // if (argumento->row == 0)
+        // {
+        //     clear_screen();
+        //     board_print(argumento->board);
+        //     usleep(.5 * 1000000);
+        // }
+        // pthread_barrier_wait(&barrera);
+    }
+    free(arg);
+}
+
 /* Calculamos la cantidad de vecinas vivas y de ahí se decide si el estado de la célula es viva o muerta*/
 char get_next_cell_state(board_t *board, int row, int col)
 {
@@ -106,37 +138,6 @@ char get_next_cell_state(board_t *board, int row, int col)
         valor = DEAD;
 
     return valor;
-}
-
-/*Función con que trabajan los hilos*/
-void *board_run_row(void *arg)
-{
-    struct arg *argumento = (struct arg *)arg;
-    char listaValores[argumento->board->columnas];
-    for (size_t i = 0; i < argumento->cycles; i++)
-    {
-        for (size_t columna = 0; columna < argumento->board->columnas; columna++)
-        {
-            /* code */
-            listaValores[columna] = get_next_cell_state(argumento->board, argumento->row, columna);
-        }
-        pthread_barrier_wait(&barrera);
-        for (size_t columna = 0; columna < argumento->board->columnas; columna++)
-        {
-            /* code */
-            board_set(argumento->board, argumento->row, columna, listaValores[columna]);
-        }
-        pthread_barrier_wait(&barrera);
-
-        // Descomentar si se quiere ver la animación
-        // if (argumento->row == 0)
-        // {
-        //     clear_screen();
-        //     board_print(argumento->board);
-        //     usleep(.5 * 1000000);
-        // }
-        // pthread_barrier_wait(&barrera);
-    }
 }
 
 /*Devuelve si una célula esta viva o muerta*/
