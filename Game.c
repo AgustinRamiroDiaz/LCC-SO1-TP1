@@ -10,15 +10,10 @@ game_t *loadGame(const char *filename)
 {
     FILE *archivo = fopen(filename, "r");
     char buff[10];
-
-    fscanf(archivo, "%s", buff);
-    int ciclos = atoi(buff);
-
-    fscanf(archivo, "%s", buff);
-    int filas = atoi(buff);
-
-    fscanf(archivo, "%s", buff);
-    int columnas = atoi(buff);
+    int ciclos,filas,columnas;
+    fscanf(archivo, "%d", &ciclos);
+    fscanf(archivo, "%d", &filas);
+    fscanf(archivo, "%d", &columnas);
 
     // salteamos el \n
     getc(archivo);
@@ -80,6 +75,7 @@ board_t *congwayGoL(board_t *board, unsigned int cycles)
     }
 }
 
+/* Calculamos la cantidad de vecinas vivas y de ahí se decide si el estado de la célula es viva o muerta*/
 char get_next_cell_state(board_t *board, int row, int col)
 {
     char valor = board_get(board, row, col);
@@ -112,6 +108,7 @@ char get_next_cell_state(board_t *board, int row, int col)
     return valor;
 }
 
+/*Función con que trabajan los hilos*/
 void *board_run_row(void *arg)
 {
     struct arg *argumento = (struct arg *)arg;
@@ -142,17 +139,20 @@ void *board_run_row(void *arg)
     }
 }
 
+/*Devuelve si una célula esta viva o muerta*/
 int is_alive(char cell)
 {
     return cell == ALIVE;
 }
 
+/*Calcula el módulo*/
 int mod(int a, int b)
 {
     int r = a % b;
     return r < 0 ? r + b : r;
 }
 
+/*Limpia la consola*/
 void clear_screen()
 {
     printf("\e[1;1H\e[2J");
