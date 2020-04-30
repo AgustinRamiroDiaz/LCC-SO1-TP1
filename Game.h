@@ -32,7 +32,7 @@ struct arg
 
 /* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
 ciclos indicados en 'cycles' */
-board_t *congwayGoL(board_t *board, unsigned int cycles);
+void congwayGoL(board_t *board, unsigned int cycles);
 
 /* La función ejecutada por los hilos que trabaja sobre la fila indicada */
 void *board_run_row(void *arg);

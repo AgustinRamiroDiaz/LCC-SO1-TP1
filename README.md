@@ -1,5 +1,8 @@
 SO1-TP1
-A la hora de implementar el juego de conways analizamos cuántos hilos deberíamos crear, para una implementación sencilla. Optamos generar hilos según la cantidad de filas existentes, siendo así posible tener una cota para una matriz de alrededor de 10000 hilos en un procesador (agregar nombre de los procesadores).
+A la hora de implementar el juego de Conway analizamos cuántos hilos deberíamos crear, para una implementación sencilla. Optamos generar hilos según la cantidad de filas existentes, siendo así posible tener una cota para una matriz de alrededor de 10000 hilos en un procesador.
 Para evitar los deadlocks decidimos implementar barreras, donde los hilos se esperan  en cada iteración del tablero. Cada hilo recorre una fila donde calcula los valores próximos de la matriz, y cuando todos terminan, cruzan la barrera y se actualizan.
 Nuevamente hay una barrera para que todos se esperen a la hora de actualizar y comienza el próximo ciclo.
-Optamos por usar punteros en todas las funciones para reducir la cantidad de memoría pasada entre las mismas.
+Optamos por usar punteros en todas las funciones para reducir la cantidad de memoría pasada entre las mismas. Para esto modificamos las funciones dadas. Una de las modificiones realizadas fue que en la función congwayGol, donde ya no devuelve una tablero sino toma la dirección de memoria de un tablero.
+A la hora de ejecutar el juego se le debe pasar como argumento la ubicación del archivo y cuando se termine de ejecutar creara un archivo con el resultado final en la misma ubicación que el archivo pasado.
+
+El trabajo consta de 6 archivos, Board.c donde se encuentra el desarrollo de las funciones correspondientes al tablero y Board.h que es el header donde están definidas las fuciones. Lo mismo sucede para Game.c y Game.h que son las funciones respecto al juego de Conway y también se encuentra main.c que es el encargado de hacer los distintos llamados para que el juego funcione. Por último existe el archivo makefile que se encarga de compilarlo.

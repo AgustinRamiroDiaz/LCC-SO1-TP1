@@ -52,7 +52,7 @@ pthread_barrier_t barrera;
 
 /* Simulamos el Juego de la Vida de Conway con tablero 'board' la cantidad de
 ciclos indicados en 'cycles' en 'nuprocs' unidades de procesamiento*/
-board_t *congwayGoL(board_t *board, unsigned int cycles)
+void congwayGoL(board_t *board, unsigned int cycles)
 {
     pthread_barrier_init(&barrera, NULL, board->filas);
     pthread_t hilos[board->filas];

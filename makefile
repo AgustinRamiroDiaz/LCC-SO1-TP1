@@ -1,3 +1,3 @@
 all:
-	gcc -o simulador  main.c Board.c Board.h Game.c Game.h -lpthread
-compile:
+	gcc -o simulador  main.c Board.c Board.h Game.c Game.h -lpthread -g
+
